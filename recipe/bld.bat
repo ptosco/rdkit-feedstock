@@ -14,7 +14,6 @@ cmake ^
     -D RDK_BUILD_FREESASA_SUPPORT=ON ^
     -D RDK_BUILD_YAEHMOP_SUPPORT=ON ^
     -D RDK_BUILD_XYZ2MOL_SUPPORT=ON ^
-    -D RDK_BUILD_PYTHON_STUBS=ON ^
     -D RDK_INSTALL_STATIC_LIBS=OFF ^
     -D RDK_INSTALL_DLLS_MSVC=ON ^
     -D RDK_INSTALL_DEV_COMPONENT=OFF ^
@@ -26,6 +25,9 @@ cmake --build . --config Release
 if errorlevel 1 exit 1
 
 cmake --build . --config Release --target install
+if errorlevel 1 exit 1
+
+cmake --build . --config Release --target stubs
 if errorlevel 1 exit 1
 
 REM copy .dll files to LIBRARY_BIN
