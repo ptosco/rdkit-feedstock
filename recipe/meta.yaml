@@ -13,6 +13,7 @@ source:
 
   patches:
     - pyproject.patch
+    - gen_rdkit_stubs_preserve_logs.patch
 
 build:
   number: 0
