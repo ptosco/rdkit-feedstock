@@ -1,0 +1,41 @@
+--- Code/GraphMol/MolStandardize/Charge.cpp
++++ Code/GraphMol/MolStandardize/Charge.cpp
+@@ -35,9 +35,19 @@ typedef boost::flyweight<
+     boost::flyweights::no_tracking>
+     param_filename_flyweight;
+ 
++namespace {
++  std::string dataToFlyweightKey(const std::vector<std::tuple<std::string, std::string, std::string>>& vectorTuples) {
++    std::string res;
++    for (const auto &tup : vectorTuples) {
++      res += std::get<0>(tup) + "|" + std::get<1>(tup) + "|" + std::get<2>(tup) + "\n";
++    }
++    return res;
++  }
++}
++
+ typedef boost::flyweight<
+     boost::flyweights::key_value<
+-        std::vector<std::tuple<std::string, std::string, std::string>>,
++        std::string,
+         AcidBaseCatalogParams>,
+     boost::flyweights::no_tracking>
+     param_data_flyweight;
+@@ -60,7 +70,7 @@ Reionizer::Reionizer(const std::string acidbaseFile) {
+ Reionizer::Reionizer(
+     const std::vector<std::tuple<std::string, std::string, std::string>>
+         &data) {
+-  const AcidBaseCatalogParams *abparams = &(param_data_flyweight(data).get());
++  const AcidBaseCatalogParams *abparams = &(param_data_flyweight(dataToFlyweightKey(data)).get());
+   this->d_abcat = new AcidBaseCatalog(abparams);
+   this->d_ccs = CHARGE_CORRECTIONS;
+ }
+@@ -68,7 +78,7 @@ Reionizer::Reionizer(
+ Reionizer::Reionizer(
+     const std::vector<std::tuple<std::string, std::string, std::string>> &data,
+     const std::vector<ChargeCorrection> ccs) {
+-  const AcidBaseCatalogParams *abparams = &(param_data_flyweight(data).get());
++  const AcidBaseCatalogParams *abparams = &(param_data_flyweight(dataToFlyweightKey(data)).get());
+   this->d_abcat = new AcidBaseCatalog(abparams);
+   this->d_ccs = ccs;
+ }
